@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './dto/user';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -12,43 +16,43 @@ export class UsersService {
   }
 
   getUser(id: string) {
-    const res = this.users.find((user) => user.id === id);
-    if (!res) {
-      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    const user = this.users.find((it) => it.id === id);
+    if (!user) {
+      throw new NotFoundException();
     }
-    return res;
+    return user;
   }
 
-  createUser(createUserDto: CreateUserDto): User {
-    const user: User = new User(createUserDto);
+  createUser(body: CreateUserDto): User {
+    const user: User = new User(body);
     this.users = [...this.users, user];
     return user;
   }
 
-  updateUser(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const user = this.users.find((user) => user.id === id);
+  updateUser(id: string, update: UpdatePasswordDto) {
+    const user = this.users.find((it) => it.id === id);
 
     if (!user) {
-      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException();
     }
-    if (user.password !== updatePasswordDto.oldPassword) {
-      throw new HttpException('forbidden', HttpStatus.FORBIDDEN);
+    if (user.password !== update.oldPassword) {
+      throw new ForbiddenException();
     }
 
-    user.password = updatePasswordDto.newPassword;
+    user.password = update.newPassword;
     user.updatedAt = Date.now();
     user.version += 1;
 
-    this.users.map((it) => (user.id === id ? user : it));
+    this.users.map((it) => (it.id === id ? user : it));
     return user;
   }
 
   removeUser(id: string) {
-    const user = this.users.find((user) => user.id === id);
+    const user = this.users.find((it) => it.id === id);
     if (!user) {
-      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException();
     }
 
-    this.users = this.users.filter((user) => user.id !== id);
+    this.users = this.users.filter((it) => it.id !== id);
   }
 }

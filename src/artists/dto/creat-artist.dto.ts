@@ -1,10 +1,6 @@
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
-export class createArtistDto {
-  // @IsString()
-  // @IsOptional()
-  // id: string;
-
+export class CreateArtistDto {
   @IsString()
   name: string;
 

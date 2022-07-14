@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Artist } from '../interfaces';
 import { ArtistsService } from './artists.service';
-import { createArtistDto } from './dto/creat-artist.dto';
+import { CreateArtistDto } from './dto/creat-artist.dto';
 
 @Controller('artist')
 export class ArtistsController {
@@ -29,14 +29,14 @@ export class ArtistsController {
   }
 
   @Post()
-  create(@Body() createArtistDto: createArtistDto): Artist {
+  create(@Body() createArtistDto: CreateArtistDto): Artist {
     return this.artistsService.createArtist(createArtistDto);
   }
 
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() createArtistDto: createArtistDto,
+    @Body() createArtistDto: CreateArtistDto,
   ) {
     return this.artistsService.updateArtist(id, createArtistDto);
   }

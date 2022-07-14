@@ -4,6 +4,8 @@ import { AlbumsService } from './albums.service';
 
 @Module({
   controllers: [AlbumsController],
-  providers: [AlbumsService]
+  providers: [AlbumsService],
 })
-export class AlbumsModule {}
+export class AlbumsModule {
+  constructor(private readonly albumsService: AlbumsService) {}
+}
