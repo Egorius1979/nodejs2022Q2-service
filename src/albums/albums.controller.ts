@@ -10,6 +10,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { FavouritesService } from '../favourites/favourites.service';
 import { TracksService } from '../tracks/tracks.service';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -19,6 +20,7 @@ export class AlbumsController {
   constructor(
     private readonly albumsService: AlbumsService,
     private readonly tracksService: TracksService,
+    private readonly favouritesService: FavouritesService,
   ) {}
 
   @Get()
@@ -28,7 +30,7 @@ export class AlbumsController {
 
   @Get(':id')
   getAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.albumsService.getById(id);
+    return this.albumsService.getById(id, false);
   }
 
   @Post()
@@ -48,6 +50,7 @@ export class AlbumsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   removeAlbum(@Param('id', ParseUUIDPipe) id: string) {
     this.tracksService.removeAlbumRef(id);
+    this.favouritesService.remove('album', id);
     return this.albumsService.remove(id);
   }
 }

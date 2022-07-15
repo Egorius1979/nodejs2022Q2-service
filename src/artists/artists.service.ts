@@ -1,22 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Artist } from '../interfaces';
 import { CreateArtistDto } from './dto/creat-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { filterItems, findItem, mapItems } from '../common-handlers';
 
 @Injectable()
 export class ArtistsService {
-  private artists: Artist[] = [];
+  private static artists: Artist[] = [];
 
   getAll() {
-    return this.artists;
+    return ArtistsService.artists;
   }
 
-  getById(id: string) {
-    const artist = this.artists.find((it) => it.id === id);
-    if (!artist) {
-      throw new NotFoundException();
-    }
-    return artist;
+  getById(id: string, isFromFavs: boolean) {
+    return findItem(ArtistsService.artists, id, isFromFavs);
   }
 
   create(body: CreateArtistDto): Artist {
@@ -24,33 +21,24 @@ export class ArtistsService {
       id: uuidv4(),
       ...body,
     };
-    this.artists = [...this.artists, artist];
+    ArtistsService.artists = [...ArtistsService.artists, artist];
 
     return artist;
   }
 
   update(id: string, update: CreateArtistDto) {
-    const artist = this.artists.find((it) => it.id === id);
-    if (!artist) {
-      throw new NotFoundException();
-    }
+    const artist = findItem(ArtistsService.artists, id, false);
 
     artist.name = update.name;
     artist.grammy = update.grammy;
 
-    this.artists = this.artists.map((artist) =>
-      artist.id === id ? artist : artist,
-    );
+    mapItems(ArtistsService.artists, id, artist);
 
     return artist;
   }
 
   remove(id: string) {
-    const artist = this.artists.find((it) => it.id === id);
-    if (!artist) {
-      throw new NotFoundException();
-    }
-
-    this.artists = this.artists.filter((it) => it.id !== id);
+    findItem(ArtistsService.artists, id, false);
+    ArtistsService.artists = filterItems(ArtistsService.artists, id);
   }
 }

@@ -1,11 +1,8 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './dto/user';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { filterItems, findItem, mapItems } from '../common-handlers';
 
 @Injectable()
 export class UsersService {
@@ -16,11 +13,7 @@ export class UsersService {
   }
 
   getById(id: string) {
-    const user = this.users.find((it) => it.id === id);
-    if (!user) {
-      throw new NotFoundException();
-    }
-    return user;
+    return findItem(this.users, id, false);
   }
 
   create(body: CreateUserDto): User {
@@ -30,11 +23,8 @@ export class UsersService {
   }
 
   update(id: string, update: UpdatePasswordDto) {
-    const user = this.users.find((it) => it.id === id);
+    const user = findItem(this.users, id, false);
 
-    if (!user) {
-      throw new NotFoundException();
-    }
     if (user.password !== update.oldPassword) {
       throw new ForbiddenException();
     }
@@ -43,16 +33,13 @@ export class UsersService {
     user.updatedAt = Date.now();
     user.version += 1;
 
-    this.users.map((it) => (it.id === id ? user : it));
+    mapItems(this.users, id, user);
+
     return user;
   }
 
   remove(id: string) {
-    const user = this.users.find((it) => it.id === id);
-    if (!user) {
-      throw new NotFoundException();
-    }
-
-    this.users = this.users.filter((it) => it.id !== id);
+    findItem(this.users, id, false);
+    this.users = filterItems(this.users, id);
   }
 }

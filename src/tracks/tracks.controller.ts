@@ -10,12 +10,16 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { FavouritesService } from '../favourites/favourites.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { TracksService } from './tracks.service';
 
 @Controller('track')
 export class TracksController {
-  constructor(private readonly tracksService: TracksService) {}
+  constructor(
+    private readonly tracksService: TracksService,
+    private readonly favouritesService: FavouritesService,
+  ) {}
 
   @Get()
   getTracks() {
@@ -24,7 +28,7 @@ export class TracksController {
 
   @Get(':id')
   getTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tracksService.getById(id);
+    return this.tracksService.getById(id, false);
   }
 
   @Post()
@@ -43,6 +47,7 @@ export class TracksController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   removeTrack(@Param('id', ParseUUIDPipe) id: string) {
+    this.favouritesService.remove('track', id);
     return this.tracksService.remove(id);
   }
 }

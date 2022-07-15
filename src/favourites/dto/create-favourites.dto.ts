@@ -1,7 +1,7 @@
 import { IsArray } from 'class-validator';
 import { Album, Artist, Track } from '../../interfaces';
 
-export class CreateFavourites {
+export class CreateFavouritesDto {
   @IsArray()
   artists: Artist[];
 

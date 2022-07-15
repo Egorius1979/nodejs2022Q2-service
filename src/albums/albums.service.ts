@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Album } from '../interfaces';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { delRef, filterItems, findItem, mapItems } from '../common-handlers';
 
 @Injectable()
 export class AlbumsService {
@@ -11,12 +12,8 @@ export class AlbumsService {
     return AlbumsService.albums;
   }
 
-  getById(id: string): Album {
-    const album = AlbumsService.albums.find((it) => it.id === id);
-    if (!album) {
-      throw new NotFoundException();
-    }
-    return album;
+  getById(id: string, isFromFavs: boolean): Album {
+    return findItem(AlbumsService.albums, id, isFromFavs);
   }
 
   create(body: CreateAlbumDto): Album {
@@ -30,36 +27,23 @@ export class AlbumsService {
   }
 
   update(id: string, update: CreateAlbumDto): Album {
-    const album = AlbumsService.albums.find((it) => it.id === id);
-    if (!album) {
-      throw new NotFoundException();
-    }
+    const album = findItem(AlbumsService.albums, id, false);
+
     album.name = update.name;
     album.year = update.year;
     album.artistId = update.artistId;
 
-    AlbumsService.albums = AlbumsService.albums.map((it) =>
-      it.id === id ? album : it,
-    );
+    mapItems(AlbumsService.albums, id, album);
 
     return album;
   }
 
   remove(id: string): void {
-    const album = AlbumsService.albums.find((it) => it.id === id);
-    if (!album) {
-      throw new NotFoundException();
-    }
-
-    AlbumsService.albums = AlbumsService.albums.filter((it) => it.id !== id);
+    findItem(AlbumsService.albums, id, false);
+    AlbumsService.albums = filterItems(AlbumsService.albums, id);
   }
 
   removeArtistRef(id: string): Album[] {
-    return AlbumsService.albums.map((it) => {
-      if (it.artistId === id) {
-        it.artistId = null;
-      }
-      return it;
-    });
+    return delRef(AlbumsService.albums, id, 'artistId');
   }
 }

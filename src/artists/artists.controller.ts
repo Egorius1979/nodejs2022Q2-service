@@ -11,6 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { AlbumsService } from '../albums/albums.service';
+import { FavouritesService } from '../favourites/favourites.service';
 import { Artist } from '../interfaces';
 import { TracksService } from '../tracks/tracks.service';
 import { ArtistsService } from './artists.service';
@@ -22,6 +23,7 @@ export class ArtistsController {
     private readonly artistsService: ArtistsService,
     private readonly albumsService: AlbumsService,
     private readonly tracksService: TracksService,
+    private readonly favouritesService: FavouritesService,
   ) {}
 
   @Get()
@@ -31,7 +33,7 @@ export class ArtistsController {
 
   @Get(':id')
   getArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artistsService.getById(id);
+    return this.artistsService.getById(id, false);
   }
 
   @Post()
@@ -52,6 +54,7 @@ export class ArtistsController {
   removeArtist(@Param('id', ParseUUIDPipe) id: string) {
     this.albumsService.removeArtistRef(id);
     this.tracksService.removeArtistRef(id);
+    this.favouritesService.remove('artist', id);
     return this.artistsService.remove(id);
   }
 }
