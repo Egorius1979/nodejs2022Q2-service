@@ -10,40 +10,48 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { AlbumsService } from '../albums/albums.service';
 import { Artist } from '../interfaces';
+import { TracksService } from '../tracks/tracks.service';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/creat-artist.dto';
 
 @Controller('artist')
 export class ArtistsController {
-  constructor(private readonly artistsService: ArtistsService) {}
+  constructor(
+    private readonly artistsService: ArtistsService,
+    private readonly albumsService: AlbumsService,
+    private readonly tracksService: TracksService,
+  ) {}
 
   @Get()
-  getAll() {
+  getArtists() {
     return this.artistsService.getAll();
   }
 
   @Get(':id')
-  getById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artistsService.getArtist(id);
+  getArtist(@Param('id', ParseUUIDPipe) id: string) {
+    return this.artistsService.getById(id);
   }
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto): Artist {
-    return this.artistsService.createArtist(createArtistDto);
+  createArtist(@Body() createArtistDto: CreateArtistDto): Artist {
+    return this.artistsService.create(createArtistDto);
   }
 
   @Put(':id')
-  update(
+  updateArtist(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() createArtistDto: CreateArtistDto,
   ) {
-    return this.artistsService.updateArtist(id, createArtistDto);
+    return this.artistsService.update(id, createArtistDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artistsService.removeArtist(id);
+  removeArtist(@Param('id', ParseUUIDPipe) id: string) {
+    this.albumsService.removeArtistRef(id);
+    this.tracksService.removeArtistRef(id);
+    return this.artistsService.remove(id);
   }
 }

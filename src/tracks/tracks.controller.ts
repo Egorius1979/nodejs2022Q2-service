@@ -18,31 +18,31 @@ export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Get()
-  getAll() {
+  getTracks() {
     return this.tracksService.getAll();
   }
 
   @Get(':id')
-  getById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tracksService.getTrack(id);
+  getTrack(@Param('id', ParseUUIDPipe) id: string) {
+    return this.tracksService.getById(id);
   }
 
   @Post()
-  create(@Body() createTrackDto: CreateTrackDto) {
-    return this.tracksService.createTrack(createTrackDto);
+  createTrack(@Body() createTrackDto: CreateTrackDto) {
+    return this.tracksService.create(createTrackDto);
   }
 
   @Put(':id')
-  update(
+  updateTrack(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() createTrackDto: CreateTrackDto,
   ) {
-    return this.tracksService.updateTrack(id, createTrackDto);
+    return this.tracksService.update(id, createTrackDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tracksService.removeArtist(id);
+  removeTrack(@Param('id', ParseUUIDPipe) id: string) {
+    return this.tracksService.remove(id);
   }
 }

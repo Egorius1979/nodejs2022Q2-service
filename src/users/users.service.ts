@@ -15,7 +15,7 @@ export class UsersService {
     return this.users;
   }
 
-  getUser(id: string) {
+  getById(id: string) {
     const user = this.users.find((it) => it.id === id);
     if (!user) {
       throw new NotFoundException();
@@ -23,13 +23,13 @@ export class UsersService {
     return user;
   }
 
-  createUser(body: CreateUserDto): User {
+  create(body: CreateUserDto): User {
     const user: User = new User(body);
     this.users = [...this.users, user];
     return user;
   }
 
-  updateUser(id: string, update: UpdatePasswordDto) {
+  update(id: string, update: UpdatePasswordDto) {
     const user = this.users.find((it) => it.id === id);
 
     if (!user) {
@@ -47,7 +47,7 @@ export class UsersService {
     return user;
   }
 
-  removeUser(id: string) {
+  remove(id: string) {
     const user = this.users.find((it) => it.id === id);
     if (!user) {
       throw new NotFoundException();

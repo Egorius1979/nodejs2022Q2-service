@@ -5,32 +5,32 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AlbumsService {
-  private albums: Album[] = [];
+  private static albums: Album[] = [];
 
   getAll(): Album[] {
-    return this.albums;
+    return AlbumsService.albums;
   }
 
-  getAlbum(id: string): Album {
-    const album = this.albums.find((it) => it.id === id);
+  getById(id: string): Album {
+    const album = AlbumsService.albums.find((it) => it.id === id);
     if (!album) {
       throw new NotFoundException();
     }
     return album;
   }
 
-  createAlbum(body: CreateAlbumDto): Album {
+  create(body: CreateAlbumDto): Album {
     const album = {
       id: uuidv4(),
       ...body,
     };
-    this.albums = [...this.albums, album];
+    AlbumsService.albums = [...AlbumsService.albums, album];
 
     return album;
   }
 
-  updateAlbum(id: string, update: CreateAlbumDto): Album {
-    const album = this.albums.find((it) => it.id === id);
+  update(id: string, update: CreateAlbumDto): Album {
+    const album = AlbumsService.albums.find((it) => it.id === id);
     if (!album) {
       throw new NotFoundException();
     }
@@ -38,17 +38,28 @@ export class AlbumsService {
     album.year = update.year;
     album.artistId = update.artistId;
 
-    this.albums = this.albums.map((it) => (it.id === id ? album : it));
+    AlbumsService.albums = AlbumsService.albums.map((it) =>
+      it.id === id ? album : it,
+    );
 
     return album;
   }
 
-  removeArtist(id: string): void {
-    const album = this.albums.find((it) => it.id === id);
+  remove(id: string): void {
+    const album = AlbumsService.albums.find((it) => it.id === id);
     if (!album) {
       throw new NotFoundException();
     }
 
-    this.albums = this.albums.filter((it) => it.id !== id);
+    AlbumsService.albums = AlbumsService.albums.filter((it) => it.id !== id);
+  }
+
+  removeArtistRef(id: string): Album[] {
+    return AlbumsService.albums.map((it) => {
+      if (it.artistId === id) {
+        it.artistId = null;
+      }
+      return it;
+    });
   }
 }

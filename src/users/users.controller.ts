@@ -27,28 +27,28 @@ export class UsersController {
   }
 
   @Get(':id')
-  getById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.getUser(id);
+  getUser(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.getById(id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createUserDto: CreateUserDto): User {
-    return this.usersService.createUser(createUserDto);
+  createUser(@Body() createUserDto: CreateUserDto): User {
+    return this.usersService.create(createUserDto);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  update(
+  updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatepasswordDto: UpdatePasswordDto,
   ) {
-    return this.usersService.updateUser(id, updatepasswordDto);
+    return this.usersService.update(id, updatepasswordDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.removeUser(id);
+  removeUser(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.remove(id);
   }
 }

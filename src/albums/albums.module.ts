@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { TracksService } from '../tracks/tracks.service';
 import { AlbumsController } from './albums.controller';
 import { AlbumsService } from './albums.service';
 
 @Module({
   controllers: [AlbumsController],
-  providers: [AlbumsService],
+  providers: [AlbumsService, TracksService],
+  exports: [AlbumsService],
+  imports: [TracksService],
 })
-export class AlbumsModule {
-  constructor(private readonly albumsService: AlbumsService) {}
-}
+export class AlbumsModule {}

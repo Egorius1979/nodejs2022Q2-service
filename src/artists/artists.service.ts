@@ -11,7 +11,7 @@ export class ArtistsService {
     return this.artists;
   }
 
-  getArtist(id: string) {
+  getById(id: string) {
     const artist = this.artists.find((it) => it.id === id);
     if (!artist) {
       throw new NotFoundException();
@@ -19,7 +19,7 @@ export class ArtistsService {
     return artist;
   }
 
-  createArtist(body: CreateArtistDto): Artist {
+  create(body: CreateArtistDto): Artist {
     const artist: Artist = {
       id: uuidv4(),
       ...body,
@@ -29,7 +29,7 @@ export class ArtistsService {
     return artist;
   }
 
-  updateArtist(id: string, update: CreateArtistDto) {
+  update(id: string, update: CreateArtistDto) {
     const artist = this.artists.find((it) => it.id === id);
     if (!artist) {
       throw new NotFoundException();
@@ -45,7 +45,7 @@ export class ArtistsService {
     return artist;
   }
 
-  removeArtist(id: string) {
+  remove(id: string) {
     const artist = this.artists.find((it) => it.id === id);
     if (!artist) {
       throw new NotFoundException();
