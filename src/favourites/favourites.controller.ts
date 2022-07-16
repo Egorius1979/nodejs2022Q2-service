@@ -8,7 +8,7 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
-import { CreateFavouritesDto } from './dto/create-favourites.dto';
+import { FavouritesDto } from './dto/favourites.dto';
 import { FavouritesService } from './favourites.service';
 
 @Controller('favs')
@@ -16,7 +16,7 @@ export class FavouritesController {
   constructor(private readonly favouritesService: FavouritesService) {}
 
   @Get()
-  getFavs(): CreateFavouritesDto {
+  getFavs(): FavouritesDto {
     return this.favouritesService.getAll();
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Artist } from '../interfaces';
 import { CreateArtistDto } from './dto/creat-artist.dto';
+import { UpdateArtistDto } from './dto/update-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { filterItems, findItem, mapItems } from '../common-handlers';
 
@@ -26,7 +27,7 @@ export class ArtistsService {
     return artist;
   }
 
-  update(id: string, update: CreateArtistDto) {
+  update(id: string, update: UpdateArtistDto) {
     const artist = findItem(ArtistsService.artists, id, false);
 
     artist.name = update.name;

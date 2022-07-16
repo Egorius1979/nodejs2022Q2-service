@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Album } from '../interfaces';
 import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { delRef, filterItems, findItem, mapItems } from '../common-handlers';
 
@@ -26,7 +27,7 @@ export class AlbumsService {
     return album;
   }
 
-  update(id: string, update: CreateAlbumDto): Album {
+  update(id: string, update: UpdateAlbumDto): Album {
     const album = findItem(AlbumsService.albums, id, false);
 
     album.name = update.name;

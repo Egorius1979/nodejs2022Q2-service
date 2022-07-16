@@ -6,7 +6,7 @@ import { CreateArtistDto } from '../artists/dto/creat-artist.dto';
 import { Favorites } from '../interfaces';
 import { CreateTrackDto } from '../tracks/dto/create-track.dto';
 import { TracksService } from '../tracks/tracks.service';
-import { CreateFavouritesDto } from './dto/create-favourites.dto';
+import { FavouritesDto } from './dto/favourites.dto';
 
 @Injectable()
 export class FavouritesService {
@@ -22,7 +22,7 @@ export class FavouritesService {
     private readonly tracks: TracksService,
   ) {}
 
-  getAll(): CreateFavouritesDto {
+  getAll(): FavouritesDto {
     const fields = Object.keys(FavouritesService.favourites);
     const result = fields.reduce((acc, field) => {
       const fieldRes: CreateAlbumDto[] | CreateArtistDto[] | CreateTrackDto[] =
@@ -30,7 +30,7 @@ export class FavouritesService {
           this[field].getById(itemId, true),
         );
       return { ...acc, [field]: fieldRes };
-    }, {} as CreateFavouritesDto);
+    }, {} as FavouritesDto);
 
     return result;
   }

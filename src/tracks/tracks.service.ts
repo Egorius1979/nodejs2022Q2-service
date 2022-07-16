@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Track } from '../interfaces';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { UpdateTrackDto } from './dto/update-track.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { delRef, filterItems, findItem, mapItems } from '../common-handlers';
 
@@ -26,7 +27,7 @@ export class TracksService {
     return track;
   }
 
-  update(id: string, update: CreateTrackDto): Track {
+  update(id: string, update: UpdateTrackDto): Track {
     const track = findItem(TracksService.tracks, id, false);
 
     track.name = update.name;
