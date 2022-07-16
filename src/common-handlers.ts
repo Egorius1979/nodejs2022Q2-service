@@ -15,7 +15,7 @@ export const filterItems = (arr, id: string) => {
   return arr.filter((it) => it.id !== id);
 };
 
-export const delRef = (arr, id, refName) => {
+export const delRef = (arr, id: string, refName: string) => {
   return arr.map((it) => {
     if (it[refName] === id) {
       it[refName] = null;

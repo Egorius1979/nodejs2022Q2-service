@@ -9,11 +9,18 @@ export class UsersService {
   private users: User[] = [];
 
   getAll() {
-    return this.users;
+    const withoutPass = this.users.reduce((acc, rec) => {
+      const user = { ...rec };
+      delete user.password;
+      return [...acc, user];
+    }, []);
+    return withoutPass;
   }
 
   getById(id: string) {
-    return findItem(this.users, id, false);
+    const user = { ...findItem(this.users, id, false) };
+    delete user.password;
+    return user;
   }
 
   create(body: CreateUserDto): User {
