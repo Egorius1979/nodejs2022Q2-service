@@ -1,0 +1,50 @@
+import { Injectable } from '@nestjs/common';
+import { Album } from '../interfaces';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { delRef, filterItems, findItem, mapItems } from '../common-handlers';
+
+@Injectable()
+export class AlbumsService {
+  private static albums: Album[] = [];
+
+  getAll(): Album[] {
+    return AlbumsService.albums;
+  }
+
+  getById(id: string, isFromFavs: boolean): Album {
+    return findItem(AlbumsService.albums, id, isFromFavs);
+  }
+
+  create(body: CreateAlbumDto): Album {
+    const album = {
+      id: uuidv4(),
+      ...body,
+    };
+    AlbumsService.albums = [...AlbumsService.albums, album];
+
+    return album;
+  }
+
+  update(id: string, update: UpdateAlbumDto): Album {
+    const album = findItem(AlbumsService.albums, id, false);
+
+    album.name = update.name;
+    album.year = update.year;
+    album.artistId = update.artistId;
+
+    mapItems(AlbumsService.albums, id, album);
+
+    return album;
+  }
+
+  remove(id: string): void {
+    findItem(AlbumsService.albums, id, false);
+    AlbumsService.albums = filterItems(AlbumsService.albums, id);
+  }
+
+  removeArtistRef(id: string): Album[] {
+    return delRef(AlbumsService.albums, id, 'artistId');
+  }
+}
