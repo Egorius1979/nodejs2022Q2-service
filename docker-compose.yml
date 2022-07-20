@@ -8,7 +8,7 @@ networks:
 
 services:
   db:
-    build: ./db/
+    build: ./db
     restart: always
     volumes:
       - postgres_volume:/var/lib/postgresql/data_directory
@@ -21,6 +21,7 @@ services:
 
   app:
     build: .
+    restart: always
     volumes:
       - .:/app/data
     depends_on:
