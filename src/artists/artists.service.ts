@@ -29,13 +29,11 @@ export class ArtistsService {
 
   update(id: string, update: UpdateArtistDto) {
     const artist = findItem(ArtistsService.artists, id, false);
+    const updatedArtist = { ...artist, ...update };
 
-    artist.name = update.name;
-    artist.grammy = update.grammy;
+    mapItems(ArtistsService.artists, id, updatedArtist);
 
-    mapItems(ArtistsService.artists, id, artist);
-
-    return artist;
+    return updatedArtist;
   }
 
   remove(id: string) {

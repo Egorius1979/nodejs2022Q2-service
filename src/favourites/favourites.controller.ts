@@ -30,7 +30,7 @@ export class FavouritesController {
 
   @Delete(':path/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeArtist(
+  removeFavs(
     @Param('path') path: string,
     @Param('id', ParseUUIDPipe) id: string,
   ) {

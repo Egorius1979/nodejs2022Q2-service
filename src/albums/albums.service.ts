@@ -29,14 +29,11 @@ export class AlbumsService {
 
   update(id: string, update: UpdateAlbumDto): Album {
     const album = findItem(AlbumsService.albums, id, false);
+    const updatedAlbum = { ...album, ...update };
 
-    album.name = update.name;
-    album.year = update.year;
-    album.artistId = update.artistId;
+    mapItems(AlbumsService.albums, id, updatedAlbum);
 
-    mapItems(AlbumsService.albums, id, album);
-
-    return album;
+    return updatedAlbum;
   }
 
   remove(id: string): void {

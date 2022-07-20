@@ -29,15 +29,11 @@ export class TracksService {
 
   update(id: string, update: UpdateTrackDto): Track {
     const track = findItem(TracksService.tracks, id, false);
+    const updatedTrack = { ...track, ...update };
 
-    track.name = update.name;
-    track.artistId = update.artistId;
-    track.albumId = update.albumId;
-    track.duration = update.duration;
+    mapItems(TracksService.tracks, id, updatedTrack);
 
-    mapItems(TracksService.tracks, id, track);
-
-    return track;
+    return updatedTrack;
   }
 
   remove(id: string): void {

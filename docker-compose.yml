@@ -1,0 +1,31 @@
+version: '3.5'
+
+volumes:
+  postgres_volume:
+networks:
+  nest-postgres:
+    driver: bridge
+
+services:
+  db:
+    build: ./db/
+    restart: always
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data_directory
+    ports:
+      - '5432:5432'
+    networks:
+      - nest-postgres
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  app:
+    build: .
+    volumes:
+      - .:/app/data
+    depends_on:
+      - db
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - nest-postgres
