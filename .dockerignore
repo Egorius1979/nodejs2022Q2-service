@@ -1,6 +1,4 @@
 node_modules
-.env
-.git
 db
 docker-compose.yml
 Dockerfile
