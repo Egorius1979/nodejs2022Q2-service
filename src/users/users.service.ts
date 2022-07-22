@@ -1,52 +1,59 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './dto/user';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { filterItems, findItem, mapItems } from '../common-handlers';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from './entity/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  constructor(
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+  ) {}
 
-  getAll() {
-    const withoutPass = this.users.reduce((acc, rec) => {
-      const user = { ...rec };
-      delete user.password;
-      return [...acc, user];
-    }, []);
-    return withoutPass;
+  async getAll() {
+    const users = await this.userRepository.find();
+    return users.map((user) => user.toResponse());
   }
 
-  getById(id: string) {
-    const user = { ...findItem(this.users, id, false) };
-    delete user.password;
+  async getById(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException();
     return user;
   }
 
-  create(body: CreateUserDto): User {
-    const user: User = new User(body);
-    this.users = [...this.users, user];
-    return user;
+  async create(body: CreateUserDto) {
+    const user = this.userRepository.create(new User(body));
+    const res = await this.userRepository.save(user);
+    return res.toResponse();
   }
 
-  update(id: string, update: UpdatePasswordDto) {
-    const user = findItem(this.users, id, false);
+  async update(id: string, update: UpdatePasswordDto) {
+    const user = await this.userRepository.findOne({ where: { id } });
 
+    if (!user) throw new NotFoundException();
     if (user.password !== update.oldPassword) {
       throw new ForbiddenException();
     }
-
+    console.log(user);
     user.password = update.newPassword;
     user.updatedAt = Date.now();
     user.version += 1;
 
-    mapItems(this.users, id, user);
+    console.log(user);
 
-    return user;
+    return (await this.userRepository.save(user)).toResponse();
   }
 
-  remove(id: string) {
-    findItem(this.users, id, false);
-    this.users = filterItems(this.users, id);
+  async remove(id: string) {
+    const res = await this.userRepository.delete(id);
+    if (res.affected === 0) throw new NotFoundException();
   }
 }

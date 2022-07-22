@@ -32,3 +32,11 @@ services:
       - ${PORT}:${PORT}
     networks:
       - nest-postgres
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    networks:
+      - nest-postgres
