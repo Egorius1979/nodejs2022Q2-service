@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Album } from '../interfaces';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -8,6 +9,10 @@ import { delRef, filterItems, findItem, mapItems } from '../common-handlers';
 @Injectable()
 export class AlbumsService {
   private static albums: Album[] = [];
+  // constructor(
+  //   @InjectRepository(UserEntity)
+  //   private userRepository: Repository<UserEntity>,
+  // ) {}
 
   getAll(): Album[] {
     return AlbumsService.albums;

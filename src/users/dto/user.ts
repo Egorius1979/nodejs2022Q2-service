@@ -1,8 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './create-user.dto';
 
 export class User {
-  id: string = uuidv4();
+  id: string;
   login: string;
   password: string;
   version: number = 1;

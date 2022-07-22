@@ -10,11 +10,16 @@ import { FavouritesService } from './favourites.service';
 
 @Module({
   controllers: [FavouritesController],
-  providers: [FavouritesService, ArtistsService, AlbumsService, TracksService],
+  providers: [
+    FavouritesService,
+    //  ArtistsService,
+    AlbumsService,
+    TracksService,
+  ],
   imports: [
-    forwardRef(() => ArtistsModule),
-    forwardRef(() => AlbumsModule),
-    forwardRef(() => TracksModule),
+    // forwardRef(() => ArtistsModule),
+    // forwardRef(() => AlbumsModule),
+    // forwardRef(() => TracksModule),
   ],
   exports: [FavouritesService],
 })

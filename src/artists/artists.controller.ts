@@ -20,10 +20,7 @@ import { CreateArtistDto } from './dto/creat-artist.dto';
 @Controller('artist')
 export class ArtistsController {
   constructor(
-    private readonly artistsService: ArtistsService,
-    private readonly albumsService: AlbumsService,
-    private readonly tracksService: TracksService,
-    private readonly favouritesService: FavouritesService,
+    private readonly artistsService: ArtistsService, // private readonly albumsService: AlbumsService, // private readonly tracksService: TracksService, // private readonly favouritesService: FavouritesService,
   ) {}
 
   @Get()
@@ -37,24 +34,24 @@ export class ArtistsController {
   }
 
   @Post()
-  createArtist(@Body() createArtistDto: CreateArtistDto): Artist {
-    return this.artistsService.create(createArtistDto);
+  async createArtist(@Body() createArtistDto: CreateArtistDto) {
+    return await this.artistsService.create(createArtistDto);
   }
 
   @Put(':id')
-  updateArtist(
+  async updateArtist(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() createArtistDto: CreateArtistDto,
   ) {
-    return this.artistsService.update(id, createArtistDto);
+    return await this.artistsService.update(id, createArtistDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeArtist(@Param('id', ParseUUIDPipe) id: string) {
-    this.albumsService.removeArtistRef(id);
-    this.tracksService.removeArtistRef(id);
-    this.favouritesService.remove('artist', id);
-    return this.artistsService.remove(id);
+  async removeArtist(@Param('id', ParseUUIDPipe) id: string) {
+    // this.albumsService.removeArtistRef(id);
+    // this.tracksService.removeArtistRef(id);
+    // this.favouritesService.remove('artist', id);
+    return await this.artistsService.remove(id);
   }
 }

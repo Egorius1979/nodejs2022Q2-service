@@ -24,7 +24,7 @@ export class UsersService {
   }
 
   async getById(id: string) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOneBy({ id });
     if (!user) throw new NotFoundException();
     return user;
   }
@@ -36,18 +36,16 @@ export class UsersService {
   }
 
   async update(id: string, update: UpdatePasswordDto) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) throw new NotFoundException();
     if (user.password !== update.oldPassword) {
       throw new ForbiddenException();
     }
-    console.log(user);
+
     user.password = update.newPassword;
     user.updatedAt = Date.now();
     user.version += 1;
-
-    console.log(user);
 
     return (await this.userRepository.save(user)).toResponse();
   }
