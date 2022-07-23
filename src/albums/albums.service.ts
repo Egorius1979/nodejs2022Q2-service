@@ -1,52 +1,56 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Album } from '../interfaces';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { delRef, filterItems, findItem, mapItems } from '../common-handlers';
+import { AlbumEntity } from './entity/album.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AlbumsService {
-  private static albums: Album[] = [];
-  // constructor(
-  //   @InjectRepository(UserEntity)
-  //   private userRepository: Repository<UserEntity>,
-  // ) {}
+  // private static albums: Album[] = [];
+  constructor(
+    @InjectRepository(AlbumEntity)
+    private albumRepository: Repository<AlbumEntity>,
+  ) {}
 
-  getAll(): Album[] {
-    return AlbumsService.albums;
+  async getAll() {
+    const albums = await this.albumRepository.find();
+    return albums;
   }
 
-  getById(id: string, isFromFavs: boolean): Album {
-    return findItem(AlbumsService.albums, id, isFromFavs);
-  }
-
-  create(body: CreateAlbumDto): Album {
-    const album = {
-      id: uuidv4(),
-      ...body,
-    };
-    AlbumsService.albums = [...AlbumsService.albums, album];
+  async getById(id: string, isFromFavs: boolean) {
+    const album = await this.albumRepository.findOneBy({ id });
+    if (!album) throw new NotFoundException();
 
     return album;
   }
 
-  update(id: string, update: UpdateAlbumDto): Album {
-    const album = findItem(AlbumsService.albums, id, false);
-    const updatedAlbum = { ...album, ...update };
+  async create(body: CreateAlbumDto) {
+    const album = this.albumRepository.create(body);
+    const res = await this.albumRepository.save(album);
 
-    mapItems(AlbumsService.albums, id, updatedAlbum);
+    return res;
+  }
+
+  async update(id: string, update: UpdateAlbumDto) {
+    const album = await this.albumRepository.findOneBy({ id });
+    if (!album) throw new NotFoundException();
+
+    const updatedAlbum = { ...album, ...update };
+    await this.albumRepository.save(updatedAlbum);
 
     return updatedAlbum;
   }
 
-  remove(id: string): void {
-    findItem(AlbumsService.albums, id, false);
-    AlbumsService.albums = filterItems(AlbumsService.albums, id);
+  async remove(id: string) {
+    const res = await this.albumRepository.delete(id);
+    if (res.affected === 0) throw new NotFoundException();
   }
 
-  removeArtistRef(id: string): Album[] {
-    return delRef(AlbumsService.albums, id, 'artistId');
-  }
+  // removeArtistRef(id: string): Album[] {
+  //   return delRef(AlbumsService.albums, id, 'artistId');
+  // }
 }

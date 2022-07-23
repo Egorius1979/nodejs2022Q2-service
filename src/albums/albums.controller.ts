@@ -10,47 +10,45 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { FavouritesService } from '../favourites/favourites.service';
-import { TracksService } from '../tracks/tracks.service';
+// import { FavouritesService } from '../favourites/favourites.service';
+// import { TracksService } from '../tracks/tracks.service';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 
 @Controller('album')
 export class AlbumsController {
   constructor(
-    private readonly albumsService: AlbumsService,
-    private readonly tracksService: TracksService,
-    private readonly favouritesService: FavouritesService,
+    private readonly albumsService: AlbumsService, // private readonly tracksService: TracksService, // private readonly favouritesService: FavouritesService,
   ) {}
 
   @Get()
-  getAlbums() {
-    return this.albumsService.getAll();
+  async getAlbums() {
+    return await this.albumsService.getAll();
   }
 
   @Get(':id')
-  getAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.albumsService.getById(id, false);
+  async getAlbum(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.albumsService.getById(id, false);
   }
 
   @Post()
-  createAlbum(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.albumsService.create(createAlbumDto);
+  async createAlbum(@Body() createAlbumDto: CreateAlbumDto) {
+    return await this.albumsService.create(createAlbumDto);
   }
 
   @Put(':id')
-  updateAlbum(
+  async updateAlbum(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() createAlbumDto: CreateAlbumDto,
   ) {
-    return this.albumsService.update(id, createAlbumDto);
+    return await this.albumsService.update(id, createAlbumDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    this.tracksService.removeAlbumRef(id);
-    this.favouritesService.remove('album', id);
-    return this.albumsService.remove(id);
+  async removeAlbum(@Param('id', ParseUUIDPipe) id: string) {
+    // this.tracksService.removeAlbumRef(id);
+    // this.favouritesService.remove('album', id);
+    return await this.albumsService.remove(id);
   }
 }

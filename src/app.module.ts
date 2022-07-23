@@ -6,7 +6,7 @@ import { TracksModule } from './tracks/tracks.module';
 import { FavouritesModule } from './favourites/favourites.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import configService from '../ormconfig';
+import configService from './ormconfig';
 
 @Module({
   imports: [

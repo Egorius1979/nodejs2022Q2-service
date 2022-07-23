@@ -13,7 +13,7 @@ import { FavouritesService } from './favourites.service';
   providers: [
     FavouritesService,
     //  ArtistsService,
-    AlbumsService,
+    // AlbumsService,
     TracksService,
   ],
   imports: [

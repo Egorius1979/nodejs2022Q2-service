@@ -18,7 +18,7 @@ export class FavouritesService {
 
   constructor(
     // private readonly artists: ArtistsService,
-    private readonly albums: AlbumsService,
+    // private readonly albums: AlbumsService,
     private readonly tracks: TracksService,
   ) {}
 
