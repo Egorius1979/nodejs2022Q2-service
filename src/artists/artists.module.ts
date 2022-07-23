@@ -10,13 +10,14 @@ import { FavouritesModule } from '../favourites/favourites.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistEntity } from './entity/artist.entity';
 import { AlbumEntity } from '../albums/entity/album.entity';
+import { TrackEntity } from '../tracks/entity/track.entity';
 
 @Module({
   controllers: [ArtistsController],
   providers: [ArtistsService, AlbumsService, TracksService, FavouritesService],
   imports: [
     // AlbumsModule, TracksModule, forwardRef(() => FavouritesModule)
-    TypeOrmModule.forFeature([ArtistEntity, AlbumEntity]),
+    TypeOrmModule.forFeature([ArtistEntity, AlbumEntity, TrackEntity]),
   ],
   exports: [ArtistsService],
 })

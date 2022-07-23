@@ -16,11 +16,10 @@ export class FavouritesService {
     tracks: [],
   };
 
-  constructor(
-    // private readonly artists: ArtistsService,
-    // private readonly albums: AlbumsService,
-    private readonly tracks: TracksService,
-  ) {}
+  constructor() // private readonly artists: ArtistsService,
+  // private readonly albums: AlbumsService,
+  // private readonly tracks: TracksService,
+  {}
 
   getAll(): FavouritesDto {
     const fields = Object.keys(FavouritesService.favourites);

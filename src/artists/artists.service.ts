@@ -31,7 +31,7 @@ export class ArtistsService {
     const artist = this.artistRepository.create(body);
     const res = await this.artistRepository.save(artist);
 
-    return artist;
+    return res;
   }
 
   async update(id: string, update: UpdateArtistDto) {

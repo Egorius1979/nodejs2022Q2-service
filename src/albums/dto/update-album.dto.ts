@@ -8,15 +8,14 @@ import {
 
 export class UpdateAlbumDto {
   @IsString()
-  // @IsOptional()
+  @IsOptional()
   name: string;
 
   @IsNumber()
-  // @IsOptional()
+  @IsOptional()
   year: number;
 
   @IsUUID()
-  // @IsOptional()
-  @ValidateIf((_, value) => value !== null)
+  @IsOptional()
   artistId: string | null;
 }

@@ -16,6 +16,7 @@ import { Artist } from '../interfaces';
 import { TracksService } from '../tracks/tracks.service';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/creat-artist.dto';
+import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Controller('artist')
 export class ArtistsController {
@@ -41,9 +42,9 @@ export class ArtistsController {
   @Put(':id')
   async updateArtist(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() createArtistDto: CreateArtistDto,
+    @Body() update: UpdateArtistDto,
   ) {
-    return await this.artistsService.update(id, createArtistDto);
+    return await this.artistsService.update(id, update);
   }
 
   @Delete(':id')

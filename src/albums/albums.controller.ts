@@ -14,6 +14,7 @@ import {
 // import { TracksService } from '../tracks/tracks.service';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 export class AlbumsController {
@@ -39,9 +40,9 @@ export class AlbumsController {
   @Put(':id')
   async updateAlbum(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() createAlbumDto: CreateAlbumDto,
+    @Body() update: UpdateAlbumDto,
   ) {
-    return await this.albumsService.update(id, createAlbumDto);
+    return await this.albumsService.update(id, update);
   }
 
   @Delete(':id')

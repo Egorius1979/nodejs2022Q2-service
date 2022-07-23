@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { DataSourceOptions } from 'typeorm';
 import { AlbumEntity } from './albums/entity/album.entity';
 import { ArtistEntity } from './artists/entity/artist.entity';
+import { TrackEntity } from './tracks/entity/track.entity';
 import { UserEntity } from './users/entity/user.entity';
 
 export default {
@@ -11,7 +12,7 @@ export default {
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [UserEntity, ArtistEntity, AlbumEntity],
+  entities: [UserEntity, ArtistEntity, AlbumEntity, TrackEntity],
   synchronize: true,
   // retryAttempts: 10,
 } as DataSourceOptions;

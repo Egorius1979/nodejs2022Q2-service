@@ -47,7 +47,8 @@ export class UsersService {
     user.updatedAt = Date.now();
     user.version += 1;
 
-    return (await this.userRepository.save(user)).toResponse();
+    const updatedUser = await this.userRepository.save(user);
+    return updatedUser.toResponse();
   }
 
   async remove(id: string) {
