@@ -10,8 +10,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-// import { FavouritesService } from '../favourites/favourites.service';
-// import { TracksService } from '../tracks/tracks.service';
+import { FavouritesService } from '../favourites/favourites.service';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -19,7 +18,8 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 @Controller('album')
 export class AlbumsController {
   constructor(
-    private readonly albumsService: AlbumsService, // private readonly tracksService: TracksService, // private readonly favouritesService: FavouritesService,
+    private readonly albumsService: AlbumsService,
+    private readonly favouritesService: FavouritesService,
   ) {}
 
   @Get()
@@ -29,7 +29,7 @@ export class AlbumsController {
 
   @Get(':id')
   async getAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.albumsService.getById(id, false);
+    return await this.albumsService.getById(id);
   }
 
   @Post()
@@ -48,8 +48,7 @@ export class AlbumsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    // this.tracksService.removeAlbumRef(id);
-    // this.favouritesService.remove('album', id);
+    await this.favouritesService.remove('album', id);
     return await this.albumsService.remove(id);
   }
 }

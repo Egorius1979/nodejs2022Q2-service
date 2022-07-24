@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { AlbumEntity } from '../../albums/entity/album.entity';
 import { ArtistEntity } from '../../artists/entity/artist.entity';
+import { FavouritEntity } from '../../favourites/entity/favourites.entity';
 // import { ArtistEntity } from '../../artists/entity/artist.entity';
 
 @Entity('track')
@@ -27,12 +28,12 @@ export class TrackEntity {
   @Column()
   duration: number;
 
-  @ManyToOne(() => ArtistEntity, (artist) => artist.track, {
+  @ManyToOne(() => ArtistEntity, {
     onDelete: 'SET NULL',
   })
   artist: ArtistEntity;
 
-  @ManyToOne(() => AlbumEntity, (album) => album.track, {
+  @ManyToOne(() => AlbumEntity, {
     onDelete: 'SET NULL',
   })
   album: AlbumEntity;

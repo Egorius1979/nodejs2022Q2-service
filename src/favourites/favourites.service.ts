@@ -1,54 +1,83 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
-import { AlbumsService } from '../albums/albums.service';
-import { CreateAlbumDto } from '../albums/dto/create-album.dto';
-import { ArtistsService } from '../artists/artists.service';
-import { CreateArtistDto } from '../artists/dto/creat-artist.dto';
-import { Favorites } from '../interfaces';
-import { CreateTrackDto } from '../tracks/dto/create-track.dto';
-import { TracksService } from '../tracks/tracks.service';
-import { FavouritesDto } from './dto/favourites.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AlbumEntity } from '../albums/entity/album.entity';
+import { ArtistEntity } from '../artists/entity/artist.entity';
+import { TrackEntity } from '../tracks/entity/track.entity';
+import { FavouritEntity } from './entity/favourites.entity';
 
 @Injectable()
 export class FavouritesService {
-  private static favourites: Favorites = {
-    artists: [],
-    albums: [],
-    tracks: [],
-  };
+  constructor(
+    @InjectRepository(AlbumEntity)
+    private albums: Repository<AlbumEntity>,
+    @InjectRepository(ArtistEntity)
+    private artists: Repository<ArtistEntity>,
+    @InjectRepository(TrackEntity)
+    private tracks: Repository<TrackEntity>,
+    @InjectRepository(FavouritEntity)
+    private favouriteRepository: Repository<FavouritEntity>,
+  ) {}
 
-  constructor() // private readonly artists: ArtistsService,
-  // private readonly albums: AlbumsService,
-  // private readonly tracks: TracksService,
-  {}
+  async getFav() {
+    const favourites = (await this.favouriteRepository.find())[0];
+    // console.log(favourites);
+    if (!favourites) {
+      const newFav = {
+        artists: [],
+        albums: [],
+        tracks: [],
+      };
+      // console.log(newFav);
+      const res = await this.favouriteRepository.save(newFav);
+      return res;
+    }
 
-  getAll(): FavouritesDto {
-    const fields = Object.keys(FavouritesService.favourites);
-    const result = fields.reduce((acc, field) => {
-      const fieldRes: CreateAlbumDto[] | CreateArtistDto[] | CreateTrackDto[] =
-        FavouritesService.favourites[field].map((itemId: string) =>
-          this[field].getById(itemId, true),
-        );
-      return { ...acc, [field]: fieldRes };
-    }, {} as FavouritesDto);
+    return favourites;
+  }
+
+  async getAll() {
+    const favourites = await this.getFav();
+    console.log('getAll: ', favourites);
+    const fields = Object.keys(favourites);
+    fields.shift();
+
+    const result = await fields.reduce(async (acc, field) => {
+      const fieldRes = await Promise.all(
+        favourites[field].map((itemId: string) =>
+          this[field].findOneBy({ id: itemId }),
+        ),
+      );
+
+      const filterdfieldRes = fieldRes.filter((it) => it);
+      // .then((res) => res.filter((it) => it));
+
+      const resAcc = await acc;
+      return { ...resAcc, [field]: filterdfieldRes };
+    }, Promise.resolve({}));
 
     return result;
   }
 
-  add(path: string, id: string): Favorites {
+  async add(path: string, id: string) {
+    const favourites = await this.getFav();
     const items = path + 's';
-    const item = this[items].getById(id, true);
+
+    const item = await this[items].findOneBy({ id });
     if (!item) throw new UnprocessableEntityException();
-    FavouritesService.favourites[items] = [
-      ...FavouritesService.favourites[items],
-      id,
-    ];
+
+    favourites[items] = [...favourites[items], id];
+    await this.favouriteRepository.save(favourites);
     return item;
   }
 
-  remove(path: string, id: string): void {
+  async remove(path: string, id: string) {
+    const favourites = await this.getFav();
     const items = path + 's';
-    FavouritesService.favourites[items] = FavouritesService.favourites[
-      items
-    ].filter((itemId: string) => itemId !== id);
+
+    favourites[items] = favourites[items].filter(
+      (itemId: string) => itemId !== id,
+    );
+    await this.favouriteRepository.save(favourites);
   }
 }

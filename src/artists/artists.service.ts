@@ -1,12 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Artist } from '../interfaces';
+import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/creat-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { v4 as uuidv4 } from 'uuid';
-import { filterItems, findItem, mapItems } from '../common-handlers';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArtistEntity } from './entity/artist.entity';
 import { Repository } from 'typeorm';
+import {
+  createItem,
+  deleteItem,
+  findItem,
+  updateItem,
+} from '../common-handlers';
 
 @Injectable()
 export class ArtistsService {
@@ -16,36 +19,22 @@ export class ArtistsService {
   ) {}
 
   async getAll() {
-    const artists = await this.artistRepository.find();
-    return artists;
+    return await this.artistRepository.find();
   }
 
-  async getById(id: string, isFromFavs: boolean) {
-    const artist = await this.artistRepository.findOneBy({ id });
-    if (!artist) throw new NotFoundException();
-
-    return artist;
+  async getById(id: string) {
+    return await findItem(this.artistRepository, id);
   }
 
   async create(body: CreateArtistDto) {
-    const artist = this.artistRepository.create(body);
-    const res = await this.artistRepository.save(artist);
-
-    return res;
+    return await createItem(this.artistRepository, body);
   }
 
   async update(id: string, update: UpdateArtistDto) {
-    const artist = await this.artistRepository.findOneBy({ id });
-    if (!artist) throw new NotFoundException();
-
-    const updatedArtist = { ...artist, ...update };
-    await this.artistRepository.save(updatedArtist);
-
-    return updatedArtist;
+    return await updateItem(this.artistRepository, id, update);
   }
 
   async remove(id: string) {
-    const res = await this.artistRepository.delete(id);
-    if (res.affected === 0) throw new NotFoundException();
+    await deleteItem(this.artistRepository, id);
   }
 }

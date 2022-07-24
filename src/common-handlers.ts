@@ -1,25 +1,38 @@
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
-export const findItem = (arr, id: string, isFromFavs: boolean) => {
-  const res = arr.find((it) => it.id === id);
-  if (!res && !isFromFavs) throw new NotFoundException();
+export const findItem = async (repository, id: string) => {
+  const res = await repository.findOneBy({ id });
+  if (!res) throw new NotFoundException();
 
   return res;
 };
 
-export const mapItems = (arr, id: string, item) => {
-  return arr.map((it) => (it.id === id ? item : it));
+export const createItem = async (repository, body) => {
+  const createdItem = repository.create(body);
+  const res = await repository.save(createdItem);
+
+  return res;
 };
 
-export const filterItems = (arr, id: string) => {
-  return arr.filter((it) => it.id !== id);
-};
+export const updateItem = async (repository, id: string, update) => {
+  const item = await findItem(repository, id);
 
-export const delRef = (arr, id: string, refName: string) => {
-  return arr.map((it) => {
-    if (it[refName] === id) {
-      it[refName] = null;
+  if (item.password) {
+    if (item.password !== update.oldPassword) {
+      throw new ForbiddenException();
     }
-    return it;
-  });
+    item.password = update.newPassword;
+    item.updatedAt = Date.now();
+    item.version += 1;
+  }
+
+  const updatedItem = item.password ? item : { ...item, ...update };
+  const res = await repository.save(updatedItem);
+  console.log(res);
+  return res;
+};
+
+export const deleteItem = async (repository, id: string) => {
+  const res = await repository.delete(id);
+  if (res.affected === 0) throw new NotFoundException();
 };

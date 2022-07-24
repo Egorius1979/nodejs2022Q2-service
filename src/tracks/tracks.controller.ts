@@ -18,7 +18,8 @@ import { TracksService } from './tracks.service';
 @Controller('track')
 export class TracksController {
   constructor(
-    private readonly tracksService: TracksService, // private readonly favouritesService: FavouritesService,
+    private readonly tracksService: TracksService,
+    private readonly favouritesService: FavouritesService,
   ) {}
 
   @Get()
@@ -28,7 +29,7 @@ export class TracksController {
 
   @Get(':id')
   async getTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.tracksService.getById(id, false);
+    return await this.tracksService.getById(id);
   }
 
   @Post()
@@ -47,7 +48,7 @@ export class TracksController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeTrack(@Param('id', ParseUUIDPipe) id: string) {
-    // this.favouritesService.remove('track', id);
+    await this.favouritesService.remove('track', id);
     return await this.tracksService.remove(id);
   }
 }
