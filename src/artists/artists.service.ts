@@ -35,6 +35,6 @@ export class ArtistsService {
   }
 
   async remove(id: string) {
-    await deleteItem(this.artistRepository, id);
+    return await deleteItem(this.artistRepository, id);
   }
 }

@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ArtistsModule } from '../artists/artists.module';
 import { ArtistEntity } from '../artists/entity/artist.entity';
 import { FavouritEntity } from '../favourites/entity/favourites.entity';
 import { FavouritesModule } from '../favourites/favourites.module';
@@ -20,6 +21,7 @@ import { AlbumEntity } from './entity/album.entity';
       FavouritEntity,
     ]),
     forwardRef(() => FavouritesModule),
+    forwardRef(() => ArtistsModule),
   ],
   exports: [TypeOrmModule],
 })

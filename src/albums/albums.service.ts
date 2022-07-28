@@ -35,6 +35,6 @@ export class AlbumsService {
   }
 
   async remove(id: string) {
-    await deleteItem(this.albumRepository, id);
+    return await deleteItem(this.albumRepository, id);
   }
 }

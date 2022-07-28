@@ -8,7 +8,7 @@ export const findItem = async (repository, id: string) => {
 };
 
 export const createItem = async (repository, body) => {
-  const createdItem = repository.create(body);
+  const createdItem = await repository.create(body);
   const res = await repository.save(createdItem);
 
   return res;
@@ -28,7 +28,6 @@ export const updateItem = async (repository, id: string, update) => {
 
   const updatedItem = item.password ? item : { ...item, ...update };
   const res = await repository.save(updatedItem);
-  console.log(res);
   return res;
 };
 

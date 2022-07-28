@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { AlbumEntity } from '../../albums/entity/album.entity';
 import { ArtistEntity } from '../../artists/entity/artist.entity';
 import { FavouritEntity } from '../../favourites/entity/favourites.entity';
@@ -37,4 +30,7 @@ export class TrackEntity {
     onDelete: 'SET NULL',
   })
   album: AlbumEntity;
+
+  // @ManyToOne(() => FavouritEntity, (favourites) => favourites.track)
+  // favourites: ArtistEntity;
 }

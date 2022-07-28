@@ -35,6 +35,6 @@ export class TracksService {
   }
 
   async remove(id: string) {
-    await deleteItem(this.trackRepository, id);
+    return await deleteItem(this.trackRepository, id);
   }
 }

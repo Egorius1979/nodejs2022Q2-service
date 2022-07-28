@@ -20,6 +20,5 @@ export default {
     TrackEntity,
     FavouritEntity,
   ],
-  synchronize: true,
-  // retryAttempts: 10,
+  synchronize: false,
 } as DataSourceOptions;
