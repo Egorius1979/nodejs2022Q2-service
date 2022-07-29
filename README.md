@@ -32,7 +32,7 @@ sudo docker-compose up
 **after everything is loaded and running open an additional terminal console and:**
 
 - use `docker ps` to get the name of the existing container (you need name or ID of the `app` container)
-- use the command `docker exec -it <container name> /bin/sh` to get a bash shell in the container
+- use the command `docker exec -it <container name> /bin/sh` to get a sh shell in the container
 
 after that, you should get to the terminal in the container, where you need to run the following command (the execution of which will launch the migration file to create empty database tables to work with the application)):
 
