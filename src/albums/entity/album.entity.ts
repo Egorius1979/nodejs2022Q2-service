@@ -1,6 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ArtistEntity } from '../../artists/entity/artist.entity';
-import { FavouritEntity } from '../../favourites/entity/favourites.entity';
 
 @Entity('album')
 export class AlbumEntity {
@@ -20,7 +19,4 @@ export class AlbumEntity {
     onDelete: 'SET NULL',
   })
   artist: ArtistEntity;
-
-  // @ManyToOne(() => FavouritEntity, favourites => favourites.album)
-  // favourites: ArtistEntity;
 }

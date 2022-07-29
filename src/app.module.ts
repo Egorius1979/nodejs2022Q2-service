@@ -6,7 +6,7 @@ import { TracksModule } from './tracks/tracks.module';
 import { FavouritesModule } from './favourites/favourites.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import configService from './ormconfig';
+import ormconfig from './ormconf';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import configService from './ormconfig';
     TracksModule,
     FavouritesModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
-    TypeOrmModule.forRoot(configService),
+    TypeOrmModule.forRoot(ormconfig),
   ],
   controllers: [],
   providers: [],

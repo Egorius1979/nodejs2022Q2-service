@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('favourites')
 export class FavouritEntity {
@@ -13,19 +13,4 @@ export class FavouritEntity {
 
   @Column('simple-array')
   tracks: string[];
-
-  //   @ManyToOne(() => ArtistEntity, (artist) => artist.id, {
-  //     onDelete: 'NO ACTION',
-  //   })
-  //   artist: ArtistEntity;
-
-  //   @ManyToOne(() => AlbumEntity, (album) => album.id, {
-  //     onDelete: 'NO ACTION',
-  //   })
-  //   album: ArtistEntity;
-
-  //   @ManyToOne(() => TrackEntity, (track) => track.id, {
-  //     onDelete: 'NO ACTION',
-  //   })
-  //   track: ArtistEntity;
 }

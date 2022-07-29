@@ -1,5 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { FavouritEntity } from '../../favourites/entity/favourites.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('artist')
 export class ArtistEntity {
@@ -11,7 +10,4 @@ export class ArtistEntity {
 
   @Column()
   grammy: boolean;
-
-  // @ManyToOne(() => FavouritEntity, (favourites) => favourites.artist)
-  // favourites: ArtistEntity;
 }
