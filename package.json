@@ -19,7 +19,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "scan": "docker scan IMAGE_NAME",
+    "scan": "docker scan nodejs2022q2-service_app && docker scan nodejs2022q2-service_db",
     "typeorm:generate": "typeorm-ts-node-commonjs migration:generate ./db/migration/init -d ./src/migrationconf.ts",
     "typeorm:run": "typeorm-ts-node-commonjs migration:run -d ./src/migrationconf.ts"
   },
