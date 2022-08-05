@@ -15,7 +15,7 @@ export class AuthService {
   async signUp(body: CreateUserDto): Promise<Tokens> {
     const newUser = await this.usersService.create(body);
     const tokens = await this.getTokens(newUser.id, newUser.login);
-    await this.usersService.updateRefresHash(newUser.id, tokens.refreshToken);
+    // await this.usersService.updateRefresHash(newUser.id, tokens.refreshToken);
 
     return tokens;
   }
@@ -24,7 +24,7 @@ export class AuthService {
     const user = await this.usersService.findOne(body.login, body.password);
 
     const tokens = await this.getTokens(user.id, user.login);
-    await this.usersService.updateRefresHash(user.id, tokens.refreshToken);
+    // await this.usersService.updateRefresHash(user.id, tokens.refreshToken);
     return tokens;
   }
 
@@ -47,14 +47,15 @@ export class AuthService {
     };
   }
 
-  async refresh(userId: string, rt: string): Promise<Tokens> {
+  async refresh(userId: string): Promise<Tokens> {
     const user = await this.usersService.getById(userId);
-    const isValidToken = await bcrypt.compare(rt, user.refHash);
+    // if (!user.refHash) throw new ForbiddenException();
 
-    if (!isValidToken) throw new ForbiddenException();
+    // const isValidToken = await bcrypt.compare(rt, user.refHash);
+    // if (!isValidToken) throw new ForbiddenException();
 
     const tokens = await this.getTokens(user.id, user.login);
-    await this.usersService.updateRefresHash(user.id, tokens.refreshToken);
+    // await this.usersService.updateRefresHash(user.id, tokens.refreshToken);
     return tokens;
   }
 }

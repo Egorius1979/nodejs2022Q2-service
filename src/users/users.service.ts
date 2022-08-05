@@ -69,9 +69,4 @@ export class UsersService {
   getHash(data: string) {
     return bcrypt.hash(data, 10);
   }
-
-  async updateRefresHash(userId: string, token: string) {
-    const hash = await this.getHash(token);
-    await this.userRepository.update({ id: userId }, { refHash: hash });
-  }
 }
