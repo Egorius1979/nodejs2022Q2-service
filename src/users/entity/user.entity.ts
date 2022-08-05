@@ -28,7 +28,6 @@ export class UserEntity {
   toResponse() {
     const res = { ...this };
     delete res.password;
-    // delete res.refHash;
     res.createdAt = +res.createdAt;
     res.updatedAt = +res.updatedAt;
     return res;

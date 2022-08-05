@@ -1,4 +1,5 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 export const findItem = async (repository, id: string) => {
   const res = await repository.findOneBy({ id });
@@ -18,10 +19,12 @@ export const updateItem = async (repository, id: string, update) => {
   const item = await findItem(repository, id);
 
   if (item.password) {
-    if (item.password !== update.oldPassword) {
+    const isValid = await bcrypt.compare(update.oldPassword, item.password);
+    if (!isValid) {
       throw new ForbiddenException();
     }
-    item.password = update.newPassword;
+
+    item.password = await bcrypt.hash(update.newPassword, 10);
     item.updatedAt = Date.now();
     item.version += 1;
   }

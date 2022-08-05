@@ -43,10 +43,10 @@ export class AuthController {
     return this.authService.signIn(body);
   }
 
-  // @UseGuards(AuthGuard('jwt-refresh'))
-  // @Post('refresh')
-  // refresh(@Req() req: Request) {
-  //   const user = req.user;
-  //   return this.authService.refresh(user['sub'], user['refreshToken']);
-  // }
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('refresh')
+  refresh(@Req() req: Request) {
+    const user = req.user;
+    return this.authService.refresh(user['sub'], user['refreshToken']);
+  }
 }
