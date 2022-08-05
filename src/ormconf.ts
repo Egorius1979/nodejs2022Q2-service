@@ -1,10 +1,5 @@
 import 'dotenv/config';
-import { DataSource, DataSourceOptions } from 'typeorm';
-import { AlbumEntity } from './albums/entity/album.entity';
-import { ArtistEntity } from './artists/entity/artist.entity';
-import { FavouritEntity } from './favourites/entity/favourites.entity';
-import { TrackEntity } from './tracks/entity/track.entity';
-import { UserEntity } from './users/entity/user.entity';
+import { DataSourceOptions } from 'typeorm';
 
 export default {
   type: 'postgres',
