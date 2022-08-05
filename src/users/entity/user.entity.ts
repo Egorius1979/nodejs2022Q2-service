@@ -1,3 +1,4 @@
+import { IsOptional } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
@@ -20,9 +21,14 @@ export class UserEntity {
   @Column('bigint')
   updatedAt: number;
 
+  @Column({ type: 'text', nullable: true })
+  @IsOptional()
+  refHash: string | null;
+
   toResponse() {
     const res = { ...this };
     delete res.password;
+    // delete res.refHash;
     res.createdAt = +res.createdAt;
     res.updatedAt = +res.updatedAt;
     return res;

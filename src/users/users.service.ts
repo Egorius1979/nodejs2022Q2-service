@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,9 @@ import {
   findItem,
   updateItem,
 } from '../common-handlers';
+import * as bcrypt from 'bcrypt';
+
+export type User = any;
 
 @Injectable()
 export class UsersService {
@@ -17,6 +20,16 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
   ) {}
+
+  async findOne(login: string, pass: string) {
+    const users = await this.userRepository.findBy({ login });
+    if (!users.length) throw new ForbiddenException();
+
+    const user = users.find((user) => bcrypt.compareSync(pass, user.password));
+    if (!user) throw new ForbiddenException();
+
+    return user;
+  }
 
   async getAll() {
     const users = await this.userRepository.find();
@@ -29,9 +42,12 @@ export class UsersService {
   }
 
   async create(body: CreateUserDto) {
+    const hash = await this.getHash(body.password);
     const timestamp = Date.now();
+
     const user = {
-      ...body,
+      login: body.login,
+      password: hash,
       createdAt: timestamp,
       updatedAt: timestamp,
       version: 1,
@@ -48,5 +64,14 @@ export class UsersService {
 
   async remove(id: string) {
     await deleteItem(this.userRepository, id);
+  }
+
+  getHash(data: string) {
+    return bcrypt.hash(data, 10);
+  }
+
+  async updateRefresHash(userId: string, token: string) {
+    const hash = await this.getHash(token);
+    await this.userRepository.update({ id: userId }, { refHash: hash });
   }
 }
