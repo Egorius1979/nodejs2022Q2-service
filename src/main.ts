@@ -6,9 +6,12 @@ import { resolve } from 'path';
 import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
 import 'dotenv/config';
+import { MyLogger } from './logger/my-logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new MyLogger(),
+  });
 
   const DOC_API = await readFile(
     resolve(process.cwd(), 'doc', 'api.yaml'),
