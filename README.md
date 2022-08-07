@@ -54,4 +54,6 @@ or via Adminer:
 localhost:8080
 ```
 
+**Refresh Tokens** can be tested via Postman by passing JSON `{"refreshToken": <token> }` in the body of the _Post_ request.
+
 **_Good Luck!_**
