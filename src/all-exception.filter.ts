@@ -30,7 +30,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
     };
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
-    this.writeToFile(JSON.stringify(responseBody));
+
+    if (+process.env.LOG_LEVEL > 1) {
+      this.writeToFile(JSON.stringify(responseBody));
+    }
   }
 
   writeToFile(log) {

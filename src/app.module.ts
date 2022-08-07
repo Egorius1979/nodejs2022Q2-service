@@ -12,7 +12,7 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LoggerMiddleware } from './logger.middleware';
 import { LoggerModule } from './logger/logger.module';
-import { AllExceptionsFilter } from './http-exception.filter';
+import { AllExceptionsFilter } from './all-exception.filter';
 
 @Module({
   imports: [
