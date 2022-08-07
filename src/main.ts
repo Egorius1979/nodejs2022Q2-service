@@ -7,10 +7,12 @@ import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
 import 'dotenv/config';
 import { MyLogger } from './logger/my-logger';
+// import { HttpExceptionFilter } from './http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: new MyLogger(),
+    // logger: new MyLogger(),
+    // logger: ['error'],
   });
 
   const DOC_API = await readFile(
@@ -23,5 +25,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(process.env.PORT);
+
+  // app.useGlobalFilters(new HttpExceptionFilter());
 }
 bootstrap();
