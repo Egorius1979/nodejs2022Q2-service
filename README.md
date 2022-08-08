@@ -54,6 +54,10 @@ or via Adminer:
 localhost:8080
 ```
 
+## Logging
+
+Create a `logs` folder at the root of the application yourself (empty folder not signed up to git).
+
 Logs are written **to separate** files (error & log). The size of each file is limited - **100Kb**.
 If you change the level of logs in the `.env` file, do not forget to save and re-save through some file from the `./src` area - otherwise the changes will not be pulled up.
 
