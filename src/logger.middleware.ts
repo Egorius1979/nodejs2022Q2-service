@@ -15,10 +15,11 @@ export class LoggerMiddleware implements NestMiddleware {
       const message = `${method}, endpoint: "${originalUrl}", status: ${statusCode} ${statusMessage}`;
       const ts = new Date().toISOString();
 
-      const firstRes = this.logger.writeToFile(
-        `[${ts}]: ${message}, body: ${JSON.stringify(body)}`,
-      );
-      const secondRes = this.logger.writeToFile(`[${ts}]: ${message}`);
+      const firstRes = () =>
+        this.logger.writeToFile(
+          `[${ts}]: ${message}, body: ${JSON.stringify(body)}`,
+        );
+      const secondRes = () => this.logger.writeToFile(`[${ts}]: ${message}`);
 
       if (
         method !== 'GET' &&
@@ -27,37 +28,37 @@ export class LoggerMiddleware implements NestMiddleware {
       ) {
         if (statusCode >= 500) {
           if (level > 1) {
-            firstRes;
+            firstRes();
             return this.logger.error(message, body);
           }
           return;
         }
         if (statusCode >= 400) {
           if (level > 0) {
-            firstRes;
+            firstRes();
             return this.logger.warn(message, body);
           }
           return;
         }
-        firstRes;
+        firstRes();
         return this.logger.log(message, body);
       }
 
       if (statusCode >= 500) {
         if (level > 1) {
-          secondRes;
+          secondRes();
           return this.logger.error(message);
         }
         return;
       }
       if (statusCode >= 400) {
         if (level > 0) {
-          secondRes;
+          secondRes();
           return this.logger.warn(message);
         }
         return;
       }
-      secondRes;
+      secondRes();
       return this.logger.log(message);
     });
 
