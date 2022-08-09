@@ -15,51 +15,36 @@ export class LoggerMiddleware implements NestMiddleware {
       const message = `${method}, endpoint: "${originalUrl}", status: ${statusCode} ${statusMessage}`;
       const ts = new Date().toISOString();
 
-      const firstRes = () =>
+      const firstRes = (type) => {
         this.logger.writeToFile(
           `[${ts}]: ${message}, body: ${JSON.stringify(body)}`,
         );
-      const secondRes = () => this.logger.writeToFile(`[${ts}]: ${message}`);
+        return this.logger[type](message, body);
+      };
 
-      if (
+      const secondRes = (type) => {
+        this.logger.writeToFile(`[${ts}]: ${message}`);
+        return this.logger[type](message);
+      };
+
+      const condition =
         method !== 'GET' &&
         method !== 'DELETE' &&
-        !originalUrl.startsWith('/favs')
-      ) {
-        if (statusCode >= 500) {
-          if (level > 1) {
-            firstRes();
-            return this.logger.error(message, body);
-          }
-          return;
-        }
-        if (statusCode >= 400) {
-          if (level > 0) {
-            firstRes();
-            return this.logger.warn(message, body);
-          }
-          return;
-        }
-        firstRes();
-        return this.logger.log(message, body);
-      }
+        !originalUrl.startsWith('/favs');
 
       if (statusCode >= 500) {
         if (level > 1) {
-          secondRes();
-          return this.logger.error(message);
+          condition ? firstRes('error') : secondRes('error');
         }
         return;
       }
       if (statusCode >= 400) {
         if (level > 0) {
-          secondRes();
-          return this.logger.warn(message);
+          condition ? firstRes('warn') : secondRes('warn');
         }
         return;
       }
-      secondRes();
-      return this.logger.log(message);
+      condition ? firstRes('log') : secondRes('log');
     });
 
     next();
