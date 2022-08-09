@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { appendFileSync, statSync } from 'fs';
+import { appendFileSync, statSync, existsSync, mkdirSync } from 'fs';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -37,6 +37,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
   }
 
   writeToFile(log) {
+    if (!existsSync('./logs')) {
+      mkdirSync('./logs');
+    }
     const file = `./logs/error${this.fileCount}.log`;
     appendFileSync(file, `\n${log}`);
 

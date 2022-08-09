@@ -1,5 +1,5 @@
 import { ConsoleLogger } from '@nestjs/common';
-import { appendFileSync, statSync } from 'fs';
+import { appendFileSync, statSync, mkdirSync, existsSync } from 'fs';
 
 export class MyLogger extends ConsoleLogger {
   fileCount: number = 1;
@@ -10,6 +10,9 @@ export class MyLogger extends ConsoleLogger {
   }
 
   writeToFile(log) {
+    if (!existsSync('./logs')) {
+      mkdirSync('./logs');
+    }
     const file = `./logs/file${this.fileCount}.log`;
     appendFileSync(file, `\n${log}`);
 
