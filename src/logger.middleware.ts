@@ -1,0 +1,52 @@
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { MyLogger } from './logger/my-logger';
+
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware {
+  constructor(private logger: MyLogger) {}
+
+  use(request: Request, response: Response, next: NextFunction): void {
+    response.on('finish', () => {
+      const { method, originalUrl, body } = request;
+      const { statusCode, statusMessage } = response;
+      const level = +process.env.LOG_LEVEL;
+
+      const message = `${method}, endpoint: "${originalUrl}", status: ${statusCode} ${statusMessage}`;
+      const ts = new Date().toISOString();
+
+      const firstRes = (type) => {
+        this.logger.writeToFile(
+          `[${ts}]: ${message}, body: ${JSON.stringify(body)}`,
+        );
+        return this.logger[type](message, body);
+      };
+
+      const secondRes = (type) => {
+        this.logger.writeToFile(`[${ts}]: ${message}`);
+        return this.logger[type](message);
+      };
+
+      const condition =
+        method !== 'GET' &&
+        method !== 'DELETE' &&
+        !originalUrl.startsWith('/favs');
+
+      if (statusCode >= 500) {
+        if (level > 1) {
+          condition ? firstRes('error') : secondRes('error');
+        }
+        return;
+      }
+      if (statusCode >= 400) {
+        if (level > 0) {
+          condition ? firstRes('warn') : secondRes('warn');
+        }
+        return;
+      }
+      condition ? firstRes('log') : secondRes('log');
+    });
+
+    next();
+  }
+}

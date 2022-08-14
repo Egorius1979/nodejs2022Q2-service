@@ -5,68 +5,60 @@
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 
-## Downloading
+## Download
 
 ```
-git clone {repository URL}
+git clone https://github.com/Egorius1979/nodejs2022Q2-service.git
 ```
 
-## Installing NPM modules
+or
 
 ```
-npm install
+git clone git@github.com:Egorius1979/nodejs2022Q2-service.git
 ```
 
-## Running application
+## Run application + PostgreSQL DB + Adminer (by [docker](https://docs.docker.com/engine/install/) & [docker-compose](https://docs.docker.com/compose/install/compose-plugin/))
 
 ```
-npm start
+docker-compose up
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
-
-## Testing
-
-After application running open new terminal and enter:
-
-To run all tests without authorization
+or
 
 ```
-npm run test
+sudo docker-compose up
 ```
 
-To run only one of all test suites
+**after everything is loaded and running open an additional terminal console and:**
+
+- use `docker ps` to get the name of the existing container (you need name or ID of the `app` container)
+- use the command `docker exec -it <container name> /bin/sh` or `docker exec -it <container name> /bin/bash` to get a sh/bash shell in the container
+
+after that, you should get to the terminal in the container, where you need to run the following command (the execution of which will launch the migration file to create empty database tables to work with the application)):
 
 ```
-npm run test -- <path to suite>
-```
-
-To run all test with authorization
+npm run typeorm:run
 
 ```
-npm run test:auth
-```
 
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
-```
-
-### Auto-fix and format
+That's all!
+Now you can run tests, directly interact with the database via Swagger:
 
 ```
-npm run lint
+localhost:4000/doc/
 ```
 
+or via Adminer:
+
 ```
-npm run format
+localhost:8080
 ```
 
-### Debugging in VSCode
+## Logging
 
-Press <kbd>F5</kbd> to debug.
+Create a `logs` folder at the root of the application yourself (empty folder not signed up to git).
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+Logs are written **to separate** files (error & log). The size of each file is limited - **100Kb**.
+If you change the level of logs in the `.env` file, do not forget to save and re-save through some file from the `./src` area - otherwise the changes will not be pulled up.
+
+**_Good Luck!_**
